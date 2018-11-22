@@ -3,11 +3,21 @@ const Schema = mongoose.Schema;
 
 const ordenSchema = Schema({
 
-    idCliente: Schema.Types.ObjectId,
+    cliente: {
+        type: Schema.Types.ObjectId,
+        ref: "Usuario"
+    },
     lugarEnvio: [Number],
-    idRestaurant: Schema.Types.ObjectId,
-    telefono: Number,
-    idMenu: [Schema.Types.ObjectId],
+    restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant"
+    },
+
+    menus: [{
+        type: Schema.Types.ObjectId,
+        ref: "Menu"
+    }],
+
     cantidad: [Number],
     fechaRegistro: {
         type: Date,

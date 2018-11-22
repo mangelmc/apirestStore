@@ -3,8 +3,14 @@ const Schema = mongoose.Schema;
 
 const menuSchema = Schema({
 
+    restaurant: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant"
+    },
     nombre: String,
-    precio: Number,
+    precio: {
+        type: Number
+    },
     descripcion: String,
     fechaRegistro: {
         type: Date,
@@ -12,7 +18,7 @@ const menuSchema = Schema({
     },
     foto: String
 })
-
+//Nombre, precio, descripción, fechaderegistro, fotografía del producto
 const menu = mongoose.model('Menu', menuSchema);
 
 module.exports = menu;

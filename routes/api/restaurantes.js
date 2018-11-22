@@ -6,7 +6,7 @@ const Restaurant = require('../../database/models/restaurant');
 /* GET restaurante. */
 router.get('/', function (req, res, next) {
 
-    Restaurant.find().exec().then(docs => {
+    Restaurant.find().populate('propietario', '-__v').exec().then(docs => {
         if (docs.length == 0) {
             res.json({
                 message: "No se encontro en la base de datos"
@@ -46,5 +46,44 @@ router.post('/', function (req, res, next) {
     });
 
 });
+
+
+router.patch('/:id', function (req, res, next) {
+    let idRestaurant = req.params.id;
+    const datos = {};
+
+    Object.keys(req.body).forEach((key) => {
+        datos[key] = req.body[key];
+    });
+    console.log(datos);
+    Restaurant.findByIdAndUpdate(idRestaurant, datos).exec()
+        .then(result => {
+            res.json({
+                message: "Datos actualizados"
+            });
+        }).catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
+});
+
+router.delete('/:id', function (req, res, next) {
+    let idRestaurant = req.params.id;
+
+    Restaurant.findByIdAndRemove(idRestaurant).exec()
+        .then(() => {
+            res.json({
+                message: "Restaurant eliminado"
+            });
+        }).catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+
+
+});
+
 
 module.exports = router;

@@ -24,19 +24,29 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     const datos = {
-        idCliente: req.body.idCliente,
+        cliente: req.body.idCliente,
         lugarEnvio: req.body.lugarEnvio,
-        idRestaurant: req.body.idRestaurant,
-        telefono: req.body.telefono,
-        idMenu: req.body.idMenu,
+        restaurant: req.body.idRestaurant,
+
+        menus: req.body.menus,
         cantidad: req.body.cantidad,
-        pagoTotal: req.body.pagoTotal,
+        precios: req.body.precios,
     };
+
+    let precios = req.body.precios;
+    let cantidad = req.body.cantidad;
+
+    let pagoTotal = 0;
+    for (let index = 0; index < precios.length; index++) {
+        pagoTotal += precios[index] * cantidad[index];
+    };
+    datos.cantidad = cantidad;
+    datos.pagoTotal = pagoTotal;
 
     var modelOrden = new Orden(datos);
     modelOrden.save().then(
         res.json({
-            message: "Orden inseertado en la bd"
+            message: "Orden insertado en la bd"
         })
     ).catch(err => {
         res.status(500).json({
