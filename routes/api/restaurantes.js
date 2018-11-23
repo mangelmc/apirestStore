@@ -35,15 +35,16 @@ router.post('/', function (req, res, next) {
     }
 
     var data = new Restaurant(datos);
-    data.save().then(
-        res.json({
-            message: "Restaurant inseertado en la bd"
-        })
-    ).catch(err => {
-        res.status(500).json({
-            error: err
-        })
-    });
+    data.save()
+        .then(result => {
+            res.json({
+                message: "Restaurant inseertado en la bd"
+            })
+        }).catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
 
 });
 

@@ -23,7 +23,7 @@ const ordenSchema = Schema({
         type: Date,
         default: Date.now()
     },
-    pagoTotal: String
+    pagoTotal: Number
 
 })
 

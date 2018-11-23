@@ -57,7 +57,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-
     const datos = {
         nombre: req.body.nombre,
         email: req.body.email,
@@ -67,16 +66,16 @@ router.post('/', function (req, res, next) {
     };
 
     var modelUsuario = new Usuario(datos);
-    modelUsuario.save().then(
-        res.json({
-            message: "Usuario inseertado en la bd"
+    modelUsuario.save().then(result => {
+            res.json({
+                message: "Usuario insertado en la bd"
+            });
         })
-    ).catch(err => {
-        res.status(500).json({
-            error: err
-        })
-    });
-
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
 });
 
 router.patch('/:id', function (req, res, next) {

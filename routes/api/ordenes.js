@@ -27,32 +27,37 @@ router.post('/', function (req, res, next) {
         cliente: req.body.idCliente,
         lugarEnvio: req.body.lugarEnvio,
         restaurant: req.body.idRestaurant,
-
         menus: req.body.menus,
-        cantidad: req.body.cantidad,
-        precios: req.body.precios,
     };
 
     let precios = req.body.precios;
     let cantidad = req.body.cantidad;
-
     let pagoTotal = 0;
-    for (let index = 0; index < precios.length; index++) {
-        pagoTotal += precios[index] * cantidad[index];
-    };
+
+    if (Array.isArray(cantidad) && Array.isArray(precios)) {
+        for (let index = 0; index < precios.length; index++) {
+            pagoTotal += +precios[index] * +cantidad[index];
+            console.log(cantidad[index]);
+        };
+    } else {
+        pagoTotal = +cantidad * +precios
+    }
+    //console.log(precios);
     datos.cantidad = cantidad;
     datos.pagoTotal = pagoTotal;
+    //console.log(pagoTotal);
 
     var modelOrden = new Orden(datos);
-    modelOrden.save().then(
-        res.json({
-            message: "Orden insertado en la bd"
-        })
-    ).catch(err => {
-        res.status(500).json({
-            error: err
-        })
-    });
+    modelOrden.save()
+        .then(result => {
+            res.json({
+                message: "Orden insertado en la bd"
+            })
+        }).catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        });
 
 });
 
