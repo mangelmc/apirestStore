@@ -1,4 +1,6 @@
 node_modules
 docker-compose.yml
 uploads
-*.pdf
+/*.pdf
+config.json
+/*.png
