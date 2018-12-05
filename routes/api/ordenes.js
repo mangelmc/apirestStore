@@ -226,16 +226,12 @@ router.get('/facturas/:id', function (req, res, next) {
                     } else {
 
 
-                        pdf = new PDFDocument
-
-
+                        pdf = new PDFDocument;
                         let writeStreamG = fs.createWriteStream(idOrden + '.pdf');
                         pdfg.pipe(writeStreamG);
-                        // Add another page 
-
-                        pdfg
-                            .fontSize(20)
-                            .text('Id de Factura : ' + idOrden, 100, 100)
+                       
+                        pdfg.fontSize(20)
+                            .text('Id de  : ' + idOrden, 100, 100)
                             .moveDown()
 
                         pdfg.fontSize(12).text('Nombre o Razon Social ' + doc.cliente.nombre, {

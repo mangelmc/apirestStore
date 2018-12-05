@@ -8,6 +8,7 @@ const ordenSchema = Schema({
         ref: "Usuario"
     },
     lugarEnvio: [Number],
+    descripcionLugar: String,
     restaurant: {
         type: Schema.Types.ObjectId,
         ref: "Restaurant"
@@ -24,6 +25,7 @@ const ordenSchema = Schema({
         default: Date.now()
     },
     pagoTotal: Number
+
 
 })
 
