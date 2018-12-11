@@ -41,7 +41,7 @@ const upload = multer({
 })*/
 
 /* GET Usuarioe. */
-router.get('/', auth, function (req, res, next) {
+router.get('/', function (req, res, next) {
 
     Usuario.find().exec().then(docs => {
         if (docs.length == 0) {
@@ -68,6 +68,7 @@ router.post('/', function (req, res, next) {
         telefono: req.body.telefono,
         ci: req.body.ci,
         avatar: req.body.avatar,
+        tipo: req.body.tipo,//el tipo de usuario
     };
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if (err) {
@@ -84,7 +85,7 @@ router.post('/', function (req, res, next) {
                 })
                 .catch(err => {
                     res.status(500).json({
-                        error: err
+                        error: err.message
                     })
                 });
 
