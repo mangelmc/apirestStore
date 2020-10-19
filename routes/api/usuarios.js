@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const bcrypt = require("bcrypt");
+const sha1 = require("sha1");
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/checkAuth');
 
@@ -60,7 +60,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-
+    function checkField(fieldData){
+        if (fieldData != undefined || fieldData != '') {
+            return true;
+        }
+        return false;
+    };
+        if (!checkField(req.body.nombre)) {
+        return;
+    }
 
     const datos = {
         nombre: req.body.nombre,
@@ -94,6 +102,8 @@ router.post('/', function (req, res, next) {
     });
 
 });
+
+
 router.post('/login', (req, res, next) => {
     Usuario.find({
             email: req.body.email
@@ -102,36 +112,32 @@ router.post('/login', (req, res, next) => {
         .then(user => {
             if (user.length < 1) {
                 return res.status(401).json({
-                    message: "Auth failed"
+                    message: "Usuario inexistente"
                 });
             }
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (err) {
-                    return res.status(401).json({
-                        message: "Auth failed"
-                    });
-                }
-                if (result) {
-                    const token = jwt.sign({
-                            email: user[0].email,
-                            userId: user[0]._id
-                        },
-                        process.env.JWT_KEY || 'secret321', {
-                            expiresIn: "1h"
-                        }
-                    );
-                    return res.status(200).json({
-                        message: "Auth successfull",
-                        token: token
-                    });
-                }
-                res.status(401).json({
-                    message: "Auth failed"
+            let password = sha1(req.body.password)
+            if (password != user[0].password) {
+                return res.status(400).json({
+                    message: "Fallo al autenticar, verifique los datos"
                 });
-            });
+            }else{
+                const token = jwt.sign({
+                    email: user[0].email,
+                    userId: user[0]._id
+                    },
+                    process.env.JWT_KEY || 'secret321', {
+                        expiresIn: "1h"
+                    });
+                
+                return res.status(200).json({
+                    message: "Acceso correcto",
+                    tipo: user[0].tipo,
+                    token
+                });
+            }
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -143,6 +149,9 @@ router.patch('/:id', function (req, res, next) {
     const datos = {};
 
     Object.keys(req.body).forEach((key) => {
+        if (key == 'tipo') {
+            return;
+        }
         datos[key] = req.body[key];
     });
     console.log(datos);

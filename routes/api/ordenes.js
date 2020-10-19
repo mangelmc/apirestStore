@@ -264,32 +264,9 @@ router.get('/facturas/:id', function (req, res, next) {
 });
 
 
-const staticmap = require("staticmap");
+/*const staticmap = require("staticmap");
 
 router.get('/maps', function (req, res, next) {
-
-
-    /*staticmap.getMap(staticmap.png({
-            width: 500,
-            height: 500
-        }), 45.4724, -73.4520, 12)
-        .then((image) => {
-            image.save('out1.png');
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-
-    staticmap.getBox(staticmap.png({
-            width: 500,
-            height: 500
-        }), 48.436034, 10.684891, 48.295985, 11.042633)
-        .then((image) => {
-            image.save('out2.png');
-        })
-        .catch((err) => {
-            console.log(err);
-        });*/
 
     staticmap.getMap(staticmap.png({
             width: 700,
@@ -310,7 +287,7 @@ router.get('/maps', function (req, res, next) {
         .catch((err) => {
             console.log(err);
         });
-});
+});*/
 module.exports = router;
 
 /*{
