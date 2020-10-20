@@ -62,7 +62,7 @@ router.post('/', function (req, res, next) {
         });
 
 });
-
+/*
 var doc = {
     "lugarEnvio": [
         -19.579398,
@@ -118,14 +118,13 @@ var doc = {
     "pagoTotal": 120,
     "__v": 0
 }
-
-
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
-const StaticMaps = require("staticmaps");
-
-
-var nodemailer = require('nodemailer'); // email sender function
+*/
+//SERVICIOS PARA CREAR FACTURA , ENVIAR EMAIL Y CREAR GUIA
+//Funciones auxiliares
+const PDFDocument = require('pdfkit'); //crear pdfs
+const fs = require('fs');//manipular archivos
+const StaticMaps = require("staticmaps");//para crear imagen a partir de un mapa
+var nodemailer = require('nodemailer'); // para enviar emails
 
 const crearFactura = (doc,callback)=>{
     let idOrden = doc._id
@@ -182,11 +181,6 @@ const crearFactura = (doc,callback)=>{
         align: 'left'
     })
     pdf.moveDown()
-    //image
-    /* pdf.image('out2.png', pdf.x, pdf.y, {
-        width: 300
-    }) */
-
     pdf.text('Detalle \n Precio \n Cantidad', {
         width: 412,
         height: 15,
@@ -229,10 +223,7 @@ const crearFactura = (doc,callback)=>{
     });
 
 }
-
-
-
-const enviarEmail = (cliente,pathFactura,callback )=>{
+const enviarEmail = (cliente,pathFactura,callback ) => {
     //ENVIAR FACTURA AL CORREO DEL CLIENTE.
     /*
         Ejemplo con gmail
@@ -267,7 +258,7 @@ const enviarEmail = (cliente,pathFactura,callback )=>{
         secure: false, 
         auth: {
             user: 'lisandro.west89@ethereal.email',
-            pass: 'vsVHbDfVgFvgrJwZ4'
+            pass: 'vsVHbDfVgFvgrJwZ41'
         }
     });
     
@@ -280,14 +271,14 @@ const enviarEmail = (cliente,pathFactura,callback )=>{
         host: "smtp.mailtrap.io",
         port: 2525,
         auth: {
-            user: "416574434ba649",
-            pass: "11cbde3da6554b"
+            user: "416574434ba649", //usuario
+            pass: "11cbde3da6554b" // contraseña
         }
         });
     */ 
     var mailOptions = {
         from: 'Api Rest Store!',
-        to: cliente.email,// Aqui va la dir de email a quien se enviara
+        to: cliente.email,// Aqui va la direccion de email a quien se enviara
         subject: 'Factura por servicio',
         text: 'Adjuntamos la factura por servicio de comidas, gracias por tu preferencia '+ cliente.nombre || "",
         attachments: [{
@@ -306,7 +297,7 @@ const enviarEmail = (cliente,pathFactura,callback )=>{
     });
 
 }
-function crearGuia(doc,callback){
+const crearGuia = (doc,callback) => {
     let idOrden = doc._id;
     const options = {
         width: 600,
@@ -357,11 +348,10 @@ function crearGuia(doc,callback){
 }
 
 
-
+//CREAR Y ENVIAR FACTURA PARA DESPUES DESCARGAR GUIA
 router.get('/sendfactura/:id', function (req, res) {
-
-    /*Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
-        .then(doc => {*/
+    Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
+        .then(doc => {
             // SE CREA LA FACTURA EN FORMATO PDF PARA DESPUES ENVIARLA POR EMAIL Y DESCAGAR LA GUIA           
             crearFactura(doc,(pathFactura)=>{
                 if (pathFactura) {
@@ -388,18 +378,17 @@ router.get('/sendfactura/:id', function (req, res) {
                 }
 
             });
-        /*
+        
         }).catch(err => {
             res.status(500).json({
                 error: err || "error"
             });
-        });*/
+        });
 });
-
-
+//CREAR Y DESCARGAR SOLO FACTURA 
 router.get('/factura/:id', function (req, res) {
-    /*Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
-        .then(doc => {*/
+    Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
+        .then(doc => {
             // SE CREA LA FACTURA EN FORMATO PDF            
             crearFactura(doc,(pathFactura)=>{
                 if (pathFactura) {
@@ -407,17 +396,17 @@ router.get('/factura/:id', function (req, res) {
                 }
 
             });
-        /*
+        
         }).catch(err => {
             res.status(500).json({
                 error: err || "error"
             });
-        });*/
+        });
 });
-
+//CREAR Y DESCARGAR SOLO GUIA
 router.get('/guia/:id', function (req, res, next) {
-    /*Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
-        .then(doc => {*/
+    Orden.findById(req.params.id).populate('restaurant').populate('menus').populate('cliente').exec()
+        .then(doc => {
             crearGuia(doc,(error,result)=>{
                 if (error) {
                     console.log(error);
@@ -431,11 +420,11 @@ router.get('/guia/:id', function (req, res, next) {
                 }
                 
             });
-    /*
+    
         }).catch(err => {
             res.status(500).json({
                 error: err || "error"
             });
-        });*/
+        });
 });
 module.exports = router;
