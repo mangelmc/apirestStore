@@ -6,7 +6,9 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+
     "cookie-parser": "^1.4.5",
+
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "fs": "0.0.1-security",
@@ -20,5 +22,6 @@
     "pug": "^3.0.0",
     "sha1": "^1.1.1",
     "staticmaps": "^1.4.2"
+
   }
 }
