@@ -11,7 +11,7 @@ var ordenesRouter = require('./routes/api/ordenes');
 var usuariosRouter = require('./routes/api/usuarios');
 var menusRouter = require('./routes/api/menus');
 
-const port = process.env.PORT || 7777;
+const port = process.env.PORT || 8000;
 
 var app = express();
 

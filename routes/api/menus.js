@@ -33,7 +33,7 @@ const upload = multer({
     /*limits: {
         fileSize: 1024 * 1024 * 5
     }*/
-})
+}).single('img');
 
 const Menu = require('../../database/models/menu');
 
@@ -84,30 +84,50 @@ router.get('/:id', function (req, res, next) {
 
 });
 
-router.post('/', upload.single("img"), function (req, res, next) {
+router.post('/', function (req, res, next) {
 
-    let url = req.file.path.substr(6, req.file.path.length);
-    const datos = {
-        nombre: req.body.nombre,
-        //telefono: req.body.telefono,
-        foto: url,
-        descripcion: req.body.descripcion,
-        restaurant: req.body.restaurant,
-        precio: req.body.precio,
-    };
+    upload(req, res, (error) => {
+        if(error){
+          return res.status(500).json({
+            detalle: error,
+            "error" : error.message
+    
+          });
+        }else{
+          if (req.file == undefined) {
+                return res.status(400).json({
+                "error" : 'No se recibio la imagen'        
+                });
+            }
+            console.log(req.file);
+            let url = req.file.path.substr(6, req.file.path.length);
+            console.log(url);
 
-    var modelMenu = new Menu(datos);
-    modelMenu.save()
-        .then(result => {
-            res.json({
-                message: "Menu insertado en la bd",
-                id: result._id
-            })
-        }).catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        });
+            const datos = {
+                nombre: req.body.nombre,
+                //telefono: req.body.telefono,
+                foto: url,
+                descripcion: req.body.descripcion,
+                restaurant: req.body.restaurant,
+                precio: req.body.precio,
+            };
+            var modelMenu = new Menu(datos);
+            modelMenu.save()
+                .then(result => {
+                    res.json({
+                        message: "Menu insertado en la bd",
+                        id: result._id
+                    })
+                }).catch(err => {
+                    res.status(500).json({
+                        error: err
+                    })
+                });
+                
+                }
+    });
+    
+    
 
 });
 
